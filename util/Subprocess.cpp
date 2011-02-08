@@ -51,17 +51,14 @@ Subprocess::~Subprocess() {
 
 int Subprocess::Start(void * arg) {
     mpArg = arg;
-#if 0
+    this->EntryPoint(this);
+    return mPid;
     if((mPid = fork()) < 0)
         throw "Can't instantiate Subprocess.";
     if(mPid == 0) {
         this->EntryPoint(this);
         exit(0);
     }
-#else
-    mPid = GetPid();
-    this->EntryPoint(this);
-#endif
     return mPid;
 }
 

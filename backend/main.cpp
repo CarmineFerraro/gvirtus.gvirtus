@@ -70,26 +70,45 @@
  */
 
 #include <iostream>
+#include <algorithm>
 #include "ConfigFile.h"
 #include "Communicator.h"
 #include "Backend.h"
 
 using namespace std;
 
+vector<string> split(const string& s, const string& f) {
+    vector<string> temp;
+    if (f.empty()) {
+        temp.push_back(s);
+        return temp;
+    }
+    typedef string::const_iterator iter;
+    const iter::difference_type f_size(distance(f.begin(), f.end()));
+    iter i(s.begin());
+    for (iter pos; (pos = search(i, s.end(), f.begin(), f.end())) != s.end();) {
+        temp.push_back(string(i, pos));
+        advance(pos, f_size);
+        i = pos;
+    }
+    temp.push_back(string(i, s.end()));
+    return temp;
+}
+
 int main(int argc, char** argv) {
     string conf = _CONFIG_FILE;
-    if(argc == 2)
+    if (argc == 2)
         conf = string(argv[1]);
     try {
         ConfigFile *cf = new ConfigFile(conf.c_str());
         Communicator *c = Communicator::Get(cf->Get("communicator"));
-        delete cf;
-        Backend b;
+        vector<string> plugins = split(cf->Get("plugins"), ",");
+        Backend b(plugins);
         b.Start(c);
         delete c;
     } catch (string &e) {
         cerr << "Exception: " << e << endl;
-    } catch(const char *e) {
+    } catch (const char *e) {
         cerr << "Exception: " << e << endl;
     }
     return 0;

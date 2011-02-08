@@ -47,7 +47,7 @@
  */
 class Backend : public Observer {
 public:
-    Backend();
+    Backend(std::vector<std::string> &plugins);
     /**
      * Starts the Backend. The call to Start() will make the Backend to serve
      * forever.

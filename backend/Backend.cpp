@@ -24,7 +24,8 @@
  */
 
 #include <vector>
-
+#include <cstring>
+#include <cstdio>
 
 /**
  * @file   Backend.cpp
@@ -43,13 +44,20 @@
 #include "Process.h"
 #include <dlfcn.h>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
 static GetHandler_t LoadModule(const char *name) {
-    void *lib = dlopen(name, RTLD_LAZY);
+    char path[4096];
+    if(*name == '/')
+        strcpy(path, name);
+    else
+        sprintf(path, _PLUGINS_DIR "/lib%s-backend.so", name);
+
+    void *lib = dlopen(path, RTLD_LAZY);
     if(lib == NULL) {
-        cerr << "Error loading " << name << ": " << dlerror() << endl;
+        cerr << "Error loading " << path << ": " << dlerror() << endl;
         return NULL;
     }
 
@@ -80,8 +88,12 @@ static GetHandler_t LoadModule(const char *name) {
     return sym;
 }
 
-Backend::Backend() {
-    mHandlers.push_back(LoadModule("libcudart-backend.so"));
+Backend::Backend(vector<string> &plugins) {
+    GetHandler_t h;
+    for(vector<string>::iterator i = plugins.begin(); i != plugins.end(); i++) {
+        if((h = LoadModule((*i).c_str())) != NULL)
+            mHandlers.push_back(h);
+    }
 }
 
 void Backend::Start(Communicator * communicator) {
