@@ -48,52 +48,8 @@
 
 using namespace std;
 
-static GetHandler_t LoadModule(const char *name) {
-    char path[4096];
-    if(*name == '/')
-        strcpy(path, name);
-    else
-        sprintf(path, _PLUGINS_DIR "/lib%s-backend.so", name);
-
-    void *lib = dlopen(path, RTLD_LAZY);
-    if(lib == NULL) {
-        cerr << "Error loading " << path << ": " << dlerror() << endl;
-        return NULL;
-    }
-
-    HandlerInit_t init = (HandlerInit_t) ((uint64_t) dlsym(lib, "HandlerInit"));
-    if(init == NULL) {
-        dlclose(lib);
-        cerr << "Error loading " << name << ": HandlerInit function not found."
-                << endl;
-        return NULL;
-    }
-
-    if(init() != 0) {
-        dlclose(lib);
-        cerr << "Error loading " << name << ": HandlerInit failed."
-                << endl;
-        return NULL;
-    }
-
-    GetHandler_t sym = (GetHandler_t) ((uint64_t) dlsym(lib, "GetHandler"));
-    if(sym == NULL) {
-        dlclose(lib);
-        cerr << "Error loading " << name << ": " << dlerror() << endl;
-        return NULL;
-    }
-
-    cout << "Loaded module '" << name << "'." << endl;
-
-    return sym;
-}
-
 Backend::Backend(vector<string> &plugins) {
-    GetHandler_t h;
-    for(vector<string>::iterator i = plugins.begin(); i != plugins.end(); i++) {
-        if((h = LoadModule((*i).c_str())) != NULL)
-            mHandlers.push_back(h);
-    }
+    mPlugins = plugins;
 }
 
 void Backend::Start(Communicator * communicator) {
@@ -101,11 +57,7 @@ void Backend::Start(Communicator * communicator) {
     while (true) {
         Communicator *client =
                 const_cast<Communicator *> (communicator->Accept());
-        vector<Handler *> *h = new vector<Handler *>();
-        for(vector<GetHandler_t>::iterator i = mHandlers.begin();
-                i != mHandlers.end(); i++)
-            h->push_back((*i)());
-        Process *process = new Process(client, h);
+        Process *process = new Process(client, mPlugins);
         process->Start(NULL);
     }
 }

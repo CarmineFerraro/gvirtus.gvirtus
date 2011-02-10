@@ -18,5 +18,5 @@ Ocl_queryDevices.cpp\
 Ocl_queryPlatformInfo.cpp\
 Ocl_samplerObjects.cpp\
 Ocl_clGlSharingApis.cpp
-libOpenCL_la_LIBADD = ../../frontend/libfrontend.a ../../util/libutil.a -lrt -lOpenCL
+libOpenCL_la_LIBADD = ../../frontend/libfrontend.a ../../util/libutil.a -lrt 
 libOpenCL_la_LDFLAGS = -version-info 1:1:0

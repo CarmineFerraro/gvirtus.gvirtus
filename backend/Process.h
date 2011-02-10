@@ -49,13 +49,14 @@
  */
 class Process : public Subprocess, public Observable {
 public:
-    Process(const Communicator *communicator, std::vector<Handler *> *handlers);
+    Process(const Communicator *communicator, std::vector<std::string> &plugins);
     virtual ~Process();
     void Setup();
     void Execute(void * arg);
 private:
     Communicator * mpCommunicator;
-    std::vector<Handler *> *mpHandlers;
+    std::vector<std::string> mPlugins;
+    std::vector<Handler *> mHandlers;
 };
 
 #endif	/* _PROCESS_H */

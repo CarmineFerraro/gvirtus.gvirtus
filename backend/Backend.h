@@ -56,6 +56,7 @@ public:
     void EventOccurred(std::string & event, void * object);
 private:
     std::vector<GetHandler_t> mHandlers;
+    std::vector<std::string> mPlugins;
 };
 
 #endif	/* _BACKEND_H */

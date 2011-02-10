@@ -39,13 +39,54 @@
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <dlfcn.h>
 
 using namespace std;
 
-Process::Process(const Communicator *communicator, vector<Handler *> *handlers)
+static GetHandler_t LoadModule(const char *name) {
+    char path[4096];
+    if(*name == '/')
+        strcpy(path, name);
+    else
+        sprintf(path, _PLUGINS_DIR "/lib%s-backend.so", name);
+
+    void *lib = dlopen(path, RTLD_LAZY);
+    if(lib == NULL) {
+        cerr << "Error loading " << path << ": " << dlerror() << endl;
+        return NULL;
+    }
+
+    HandlerInit_t init = (HandlerInit_t) ((uint64_t) dlsym(lib, "HandlerInit"));
+    if(init == NULL) {
+        dlclose(lib);
+        cerr << "Error loading " << name << ": HandlerInit function not found."
+                << endl;
+        return NULL;
+    }
+
+    if(init() != 0) {
+        dlclose(lib);
+        cerr << "Error loading " << name << ": HandlerInit failed."
+                << endl;
+        return NULL;
+    }
+
+    GetHandler_t sym = (GetHandler_t) ((uint64_t) dlsym(lib, "GetHandler"));
+    if(sym == NULL) {
+        dlclose(lib);
+        cerr << "Error loading " << name << ": " << dlerror() << endl;
+        return NULL;
+    }
+
+    cout << "Loaded module '" << name << "'." << endl;
+
+    return sym;
+}
+
+Process::Process(const Communicator *communicator, vector<string> &plugins)
 : Subprocess(), Observable() {
     mpCommunicator = const_cast<Communicator *> (communicator);
-    mpHandlers = handlers;
+    mPlugins = plugins;
 }
 
 Process::~Process() {
@@ -71,13 +112,21 @@ static bool getstring(Communicator *c, string & s) {
 void Process::Execute(void * arg) {
     cout << "[Process " << GetPid() << "]: Started." << endl;
 
+    GetHandler_t h;
+    for(vector<string>::iterator i = mPlugins.begin(); i != mPlugins.end();
+            i++) {
+        if((h = LoadModule((*i).c_str())) != NULL)
+            mHandlers.push_back(h());
+    }
+
     string routine;
     Buffer * input_buffer = new Buffer();
     while (getstring(mpCommunicator, routine)) {
+        cout << "Routine: " << routine << endl;
         input_buffer->Reset(mpCommunicator);
         Handler *h = NULL;
-        for(vector<Handler *>::iterator i = mpHandlers->begin();
-                i != mpHandlers->end(); i++) {
+        for(vector<Handler *>::iterator i = mHandlers.begin();
+                i != mHandlers.end(); i++) {
             if((*i)->CanExecute(routine)) {
                 h = *i;
                 break;

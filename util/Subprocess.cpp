@@ -51,8 +51,6 @@ Subprocess::~Subprocess() {
 
 int Subprocess::Start(void * arg) {
     mpArg = arg;
-    this->EntryPoint(this);
-    return mPid;
     if((mPid = fork()) < 0)
         throw "Can't instantiate Subprocess.";
     if(mPid == 0) {
