@@ -49,6 +49,8 @@
       <in>Util.h</in>
       <in>VMShmCommunicator.cpp</in>
       <in>VMShmCommunicator.h</in>
+      <in>VMSocketCommunicator.cpp</in>
+      <in>VMSocketCommunicator.h</in>
       <in>VmciCommunicator.cpp</in>
       <in>VmciCommunicator.h</in>
     </df>

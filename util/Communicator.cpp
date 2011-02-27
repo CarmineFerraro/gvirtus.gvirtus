@@ -43,6 +43,7 @@
 #include "VmciCommunicator.h"
 #include "ShmCommunicator.h"
 #include "VMShmCommunicator.h"
+#include "VMSocketCommunicator.h"
 #endif
 #include "TcpCommunicator.h"
 
@@ -57,12 +58,14 @@ Communicator * Communicator::Get(const std::string & communicator) {
     memmove(type, s, tmp - s);
     type[tmp - s] = 0;
 #ifndef _WIN32
-	if (strcmp(type, "afunix") == 0)
+    if (strcmp(type, "afunix") == 0)
         return new AfUnixCommunicator(communicator);
     if (strcmp(type, "shm") == 0)
         return new ShmCommunicator(communicator);
     if (strcmp(type, "vmshm") == 0)
         return new VMShmCommunicator(communicator);
+    if (strcmp(type, "vmsocket") == 0)
+        return new VMSocketCommunicator(communicator);
 #endif
     if (strcmp(type, "tcp") == 0)
         return new TcpCommunicator(communicator);

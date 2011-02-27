@@ -28,6 +28,8 @@ Thread.cpp\
 Thread.h\
 VMShmCommunicator.cpp\
 VMShmCommunicator.h\
+VMSocketCommunicator.cpp\
+VMSocketCommunicator.h\
 VmciCommunicator.cpp\
 VmciCommunicator.h
 
