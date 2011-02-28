@@ -80,17 +80,11 @@ AC_CONFIG_FILES([Makefile
                  frontend/Makefile
                  test/Makefile
                  util/Makefile
-		 cuda/Makefile
-		 cuda/backend/Makefile
-		 cuda/frontend/Makefile
 		 cudadr/Makefile
 		 cudadr/backend/Makefile
 		 cudadr/frontend/Makefile
 		 opencl/Makefile
 		 opencl/backend/Makefile
 		 opencl/frontend/Makefile
-		 opengl/Makefile
-		 opengl/backend/Makefile
-		 opengl/frontend/Makefile
 		])
 AC_OUTPUT
