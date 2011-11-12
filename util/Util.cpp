@@ -26,7 +26,7 @@
 /**
  * @file   Util.cpp
  * @author Giuseppe Coviello <giuseppe.coviello@uniparthenope.it>
- * @date   Wed Jul 21 10:19:26 2010
+ * @date   Sun Oct 11 17:16:48 2009
  *
  * @brief
  *
@@ -36,22 +36,45 @@
 #include "Util.h"
 
 #include <cstdio>
+#include <iostream>
+
 
 using namespace std;
 
-string Util::Exec(const char* cmd) {
-    FILE* pipe = popen(cmd, "r");
-    if (!pipe) return "ERROR";
-    char buffer[128];
-    std::string result = "";
-    while (!feof(pipe)) {
-        if (fgets(buffer, 128, pipe) != NULL)
-            result += buffer;
-    }
-    pclose(pipe);
-    return result;
+Util::Util() {
 }
 
-string Util::Exec(std::string& cmd) {
-    return Exec(cmd.c_str());
+Util::Util(const Util& orig) {
 }
+
+Util::~Util() {
+}
+
+char * Util::MarshalHostPointer(const void* ptr) {
+    char *marshal = new char[Util::MarshaledHostPointerSize];
+    MarshalHostPointer(ptr, marshal);
+    return marshal;
+}
+
+void Util::MarshalHostPointer(const void * ptr, char * marshal) {
+#ifdef _WIN32
+    sprintf_s(marshal, 10, "%p", ptr);
+#else
+    sprintf(marshal, "%p", ptr);
+#endif
+}
+
+char * Util::MarshalDevicePointer(const void* devPtr) {
+    char *marshal = new char[Util::MarshaledDevicePointerSize];
+    MarshalDevicePointer(devPtr, marshal);
+    return marshal;
+}
+
+void Util::MarshalDevicePointer(const void* devPtr, char * marshal) {
+#ifdef _WIN32
+    sprintf_s(marshal, 10, "%p", devPtr);
+#else
+    sprintf(marshal, "%p", devPtr);
+#endif
+}
+

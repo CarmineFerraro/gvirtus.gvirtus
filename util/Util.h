@@ -26,26 +26,47 @@
 /**
  * @file   Util.h
  * @author Giuseppe Coviello <giuseppe.coviello@uniparthenope.it>
- * @date   Wed Jul 21 10:19:26 2010
- *
- * @brief
- *
- *
+ * @date   Sun Oct 11 17:16:48 2009
+ * 
+ * @brief  
+ * 
+ * 
  */
 
-#ifndef UTIL_H
-#define	UTIL_H
+#ifndef _UTIL_H
+#define	_UTIL_H
 
-#include <string>
+#include <iostream>
+#include <cstdlib>
 
+
+#include "Buffer.h"
+
+/**
+ *Util contains facility functions used by gVirtuS. These functions
+ * includes the ones for marshalling and unmarshalling pointers and "CUDA fat
+ * binaries". 
+ */
 class Util {
 public:
-    static std::string Exec(std::string & cmd);
-    static std::string Exec(const char* cmd);
+    Util();
+    Util(const Util& orig);
+    virtual ~Util();
+    static const size_t MarshaledDevicePointerSize = sizeof(void *) * 2 + 3;
+    static const size_t MarshaledHostPointerSize = sizeof(void *) * 2 + 3;
+    static char * MarshalHostPointer(const void* ptr);
+    static void MarshalHostPointer(const void * ptr, char * marshal);
+    static char * MarshalDevicePointer(const void *devPtr);
+    static void MarshalDevicePointer(const void *devPtr, char * marshal);
+    static inline void * UnmarshalPointer(const char *marshal) {
+        return (void *) strtoul(marshal, NULL, 16);
+    }
+    template <class T> static inline uint64_t MarshalPointer(const T ptr) {
+        return static_cast<uint64_t>(ptr);
+    }
 
 private:
-
 };
 
-#endif	/* UTIL_H */
+#endif	/* _UTIL_H */
 

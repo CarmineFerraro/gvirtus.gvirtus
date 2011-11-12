@@ -8,8 +8,6 @@ Communicator.cpp\
 Communicator.h\
 ConfigFile.cpp\
 ConfigFile.h\
-CudaUtil.cpp\
-CudaUtil.h\
 Mutex.cpp\
 Mutex.h\
 Observable.cpp\
@@ -26,6 +24,8 @@ TcpCommunicator.cpp\
 TcpCommunicator.h\
 Thread.cpp\
 Thread.h\
+Util.cpp\
+Util.h\
 VMShmCommunicator.cpp\
 VMShmCommunicator.h\
 VMSocketCommunicator.cpp\
@@ -39,7 +39,6 @@ AfUnixCommunicator.h\
 Buffer.h\
 Communicator.h\
 ConfigFile.h\
-CudaUtil.h\
 Mutex.h\
 Observable.h\
 Observer.h\
@@ -48,6 +47,7 @@ ShmCommunicator.h\
 Subprocess.h\
 TcpCommunicator.h\
 Thread.h\
+Util.h\
 VMShmCommunicator.h\
 VmciCommunicator.h
 
