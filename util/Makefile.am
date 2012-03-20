@@ -30,6 +30,8 @@ VMShmCommunicator.cpp\
 VMShmCommunicator.h\
 VMSocketCommunicator.cpp\
 VMSocketCommunicator.h\
+VirtioCommunicator.cpp\
+VirtioCommunicator.h\
 VmciCommunicator.cpp\
 VmciCommunicator.h
 

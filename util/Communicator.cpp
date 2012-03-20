@@ -44,6 +44,7 @@
 #include "ShmCommunicator.h"
 #include "VMShmCommunicator.h"
 #include "VMSocketCommunicator.h"
+#include "VirtioCommunicator.h"
 #endif
 #include "TcpCommunicator.h"
 
@@ -66,6 +67,8 @@ Communicator * Communicator::Get(const std::string & communicator) {
         return new VMShmCommunicator(communicator);
     if (strcmp(type, "vmsocket") == 0)
         return new VMSocketCommunicator(communicator);
+    if (strcmp(type, "virtio") == 0)
+        return new VirtioCommunicator(communicator);
 #endif
     if (strcmp(type, "tcp") == 0)
         return new TcpCommunicator(communicator);

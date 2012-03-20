@@ -51,6 +51,8 @@
       <in>VMShmCommunicator.h</in>
       <in>VMSocketCommunicator.cpp</in>
       <in>VMSocketCommunicator.h</in>
+      <in>VirtioCommunicator.cpp</in>
+      <in>VirtioCommunicator.h</in>
       <in>VmciCommunicator.cpp</in>
       <in>VmciCommunicator.h</in>
     </df>
