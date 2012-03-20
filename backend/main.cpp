@@ -83,6 +83,8 @@ vector<string> split(const string& s, const string& f) {
         temp.push_back(s);
         return temp;
     }
+    if (s.empty())
+        return temp;
     typedef string::const_iterator iter;
     const iter::difference_type f_size(distance(f.begin(), f.end()));
     iter i(s.begin());
