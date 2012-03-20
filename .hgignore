@@ -52,3 +52,7 @@ Makefile\.in$
 ^test/.*\.log$
 ^test/.*\.csv$
 ^cudadr/backend/gvirtus-cudadr-backend$
+^util/libutil.a$
+^frontend/.libs$
+^frontend/.*\.la$
+^frontend/.*\.lo$
